@@ -15,7 +15,7 @@ Install this plugin in the same environment as Datasette.
 
 ## Usage
 
-Usage instructions go here.
+Once installed, text values should no longer be truncated when a table is displayed.
 
 ## Development
 

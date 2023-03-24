@@ -3,9 +3,12 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_plugin_is_installed():
+async def test_no_truncate():
     datasette = Datasette(memory=True)
-    response = await datasette.client.get("/-/plugins.json")
+    db = datasette.add_memory_database("test")
+    bigstring = "a" * 10000
+    await db.execute_write("create table t (x text)")
+    await db.execute_write("insert into t (x) values (?)", (bigstring,))
+    response = await datasette.client.get("/test/t")
     assert response.status_code == 200
-    installed_plugins = {p["name"] for p in response.json()}
-    assert "datasette-no-truncate" in installed_plugins
+    assert bigstring in response.text
